@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eukleia · Estimation locative — L'Escale rénové vue mer, Villers-sur-Mer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; background: #F7F4EF; color: #1B2B4B; min-height: 100vh; }
+  .header { background: #1B2B4B; position: relative; overflow: hidden; }
+  .header-bar { width: 6px; background: #B8975A; position: absolute; left: 0; top: 0; bottom: 0; }
+  .header-inner { padding: 24px 40px 20px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand-name { font-family: Georgia, serif; font-size: 20px; letter-spacing: 5px; color: #B8975A; }
+  .brand-sub { font-size: 10px; letter-spacing: 2px; color: #8A9BAB; text-transform: uppercase; }
+  .header-title { font-family: Georgia, serif; font-size: 15px; color: #fff; }
+  .header-subtitle { font-size: 10px; color: #8A9BAB; margin-top: 3px; }
+  .header-meta { text-align: right; }
+  .tabs-wrap { background: #162340; padding: 0 40px; display: flex; gap: 0; border-bottom: 2px solid #B8975A; flex-wrap: wrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs-wrap::-webkit-scrollbar { display: none; }
+  .tab { padding: 13px 20px; font-size: 12px; color: #8A9BAB; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
+  .tab:hover { color: #D4B896; }
+  .tab.active { color: #B8975A; border-bottom-color: #B8975A; font-weight: 600; }
+  .content { padding: 24px 40px 36px; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .kpi { background: #fff; border-radius: 10px; padding: 16px 20px; border: 1px solid #EDE8DF; position: relative; overflow: hidden; }
+  .kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: #B8975A; }
+  .kpi.accent::before { background: #2D6A4F; }
+  .kpi.dark { background: #1B2B4B; border-color: #1B2B4B; }
+  .kpi.dark::before { background: #B8975A; }
+  .kpi.red::before { background: #A32D2D; }
+  .kpi.red { background: #FDF5F5; border-color: #E8D0D0; }
+  .kpi-label { font-size: 11px; color: #8A9BAB; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .kpi.dark .kpi-label { color: #D4B896; }
+  .kpi.red .kpi-label { color: #A32D2D; }
+  .kpi-value { font-family: Georgia, serif; font-size: 24px; color: #1B2B4B; }
+  .kpi.accent .kpi-value { color: #2D6A4F; }
+  .kpi.dark .kpi-value { color: #fff; }
+  .kpi-sub { font-size: 11px; color: #8A9BAB; margin-top: 3px; }
+  .table-wrap { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+  thead tr { background: #1B2B4B; }
+  thead th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: #D4B896; letter-spacing: 0.5px; }
+  tbody tr { border-bottom: 1px solid #F0EDE7; transition: background 0.15s; }
+  tbody tr:hover { background: #FDFCFA; }
+  tbody td { padding: 8px 12px; color: #1B2B4B; }
+  .total-row td { background: #1B2B4B !important; color: #fff; font-weight: 600; }
+  .total-row td.gold { color: #B8975A; }
+  .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .badge-basse { background: #E6F1FB; color: #0C447C; }
+  .badge-mi { background: #FAEEDA; color: #633806; }
+  .badge-haute { background: #EAF3DE; color: #27500A; }
+  .bar-wrap { display: inline-block; width: 55px; height: 6px; background: #F0EDE7; border-radius: 3px; vertical-align: middle; }
+  .bar-fill { height: 6px; border-radius: 3px; }
+  .occ-label { font-size: 11px; color: #8A9BAB; margin-left: 5px; }
+  .green { color: #2D6A4F; font-weight: 600; }
+  .red { color: #A32D2D; font-weight: 600; }
+  .muted { color: #8A9BAB; }
+  .bold-navy { font-weight: 600; color: #1B2B4B; }
+  .chart-wrap { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; padding: 24px; margin-bottom: 20px; }
+  .chart-title { font-family: Georgia, serif; font-size: 15px; color: #1B2B4B; margin-bottom: 16px; }
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-month { width: 28px; font-size: 11px; color: #8A9BAB; text-align: right; flex-shrink: 0; }
+  .bar-tracks { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .bar-track { height: 14px; border-radius: 3px; min-width: 2px; transition: width 0.4s; display: flex; align-items: center; padding-left: 5px; }
+  .bar-track .bar-label { font-size: 9px; color: #fff; font-weight: 600; white-space: nowrap; }
+  .legend { display: flex; gap: 18px; margin-bottom: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #5C6B7A; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 2px; }
+  .scenarios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .scenario { background: #fff; border-radius: 10px; border: 1px solid #EDE8DF; padding: 18px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+  .scenario:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .scenario.selected { border-color: #B8975A; border-width: 2px; box-shadow: 0 4px 16px rgba(184,151,90,0.2); }
+  .scenario::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .scenario.plancher::before { background: #8A9BAB; }
+  .scenario.central::before { background: #B8975A; }
+  .scenario.plafond::before { background: #1B2B4B; }
+  .scenario-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+  .scenario.plancher .scenario-label { color: #8A9BAB; }
+  .scenario.central .scenario-label { color: #B8975A; }
+  .scenario.plafond .scenario-label { color: #1B2B4B; }
+  .scenario-value { font-family: Georgia, serif; font-size: 26px; color: #1B2B4B; margin-bottom: 3px; }
+  .scenario-nights { font-size: 12px; color: #5C6B7A; }
+  .scenario-occup { font-size: 11px; color: #8A9BAB; }
+  .source { font-size: 10px; color: #8A9BAB; margin-top: 16px; font-style: italic; }
+  .footer { background: #1B2B4B; padding: 14px 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .footer-brand { font-family: Georgia, serif; font-size: 12px; color: #B8975A; letter-spacing: 3px; }
+  .footer-contact { font-size: 10px; color: #8A9BAB; }
+  .hidden { display: none; }
+  .gain-card { background: #2D6A4F; border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .gain-label { font-size: 12px; color: #9FE1CB; }
+  .gain-value { font-family: Georgia, serif; font-size: 24px; color: #fff; }
+  @media (max-width: 768px) {
+    .header-inner { padding: 16px 16px 14px 24px; flex-direction: column; align-items: flex-start; }
+    .header-meta { text-align: left; }
+    .content { padding: 14px 12px 28px; }
+    .kpi-grid { grid-template-columns: 1fr; }
+    .kpi-value { font-size: 20px; }
+    table { min-width: 520px; font-size: 11px; }
+    .scenarios-grid { grid-template-columns: 1fr; }
+    .chart-wrap { padding: 14px 10px; }
+    .footer { padding: 12px 14px; flex-direction: column; align-items: flex-start; }
+    .tab { padding: 10px 12px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-bar"></div>
+  <div class="header-inner">
+    <div><div class="brand-name">EUKLEIA</div><div class="brand-sub">Conciergerie Premium · Deauville / Trouville</div></div>
+    <div class="header-meta">
+      <div class="header-title">Estimation locative — L'Escale rénové vue mer</div>
+      <div class="header-subtitle">Mme Nicole & M. Frédéric Brouillard · 321 rue des Martrois, Résidence Le Grand Cap, 14640 Villers-sur-Mer</div>
+    </div>
+  </div>
+</div>
+<div class="tabs-wrap">
+  <div class="tab active" onclick="showTab('actuel')">📊 Situation actuelle</div>
+  <div class="tab" onclick="showTab('eukleia')">🚀 Avec Eukleia</div>
+  <div class="tab" onclick="showTab('comparaison')">📈 Comparaison</div>
+  <div class="tab" onclick="showTab('scenarios')">🎯 Scénarios</div>
+</div>
+<div class="content">
+
+<!-- TAB 1 — SITUATION ACTUELLE -->
+<div id="tab-actuel">
+  <div class="kpi-grid">
+    <div class="kpi red"><div class="kpi-label">Nuits louées / an</div><div class="kpi-value">16 nuits</div><div class="kpi-sub">Airbnb uniquement · tarif plat</div></div>
+    <div class="kpi red"><div class="kpi-label">Revenus bruts / an</div><div class="kpi-value">~2 800 €</div><div class="kpi-sub">Juillet et août entièrement vides</div></div>
+    <div class="kpi red"><div class="kpi-label">Tarif / nuit</div><div class="kpi-value">~174 €</div><div class="kpi-sub">Aucune tarification dynamique</div></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Tarif/nuit</th><th>Nuits</th><th>Revenus</th><th>Observation</th></tr></thead><tbody id="tbody-actuel"></tbody></table></div>
+  <p class="source">Données observées sur le calendrier Airbnb de l'annonce au 27/03/2026. Tarifs scrapés : 174,24 €/nuit (avr, jun, oct, déc), 162,55 € (jul), 170,34 € (août). L'annonce est gérée par une conciergerie externe, Airbnb uniquement, 10 avis en 5 ans.</p>
+</div>
+
+<!-- TAB 2 — AVEC EUKLEIA -->
+<div id="tab-eukleia" class="hidden">
+  <div class="kpi-grid">
+    <div class="kpi accent"><div class="kpi-label">Nuits louées / an</div><div class="kpi-value">125</div><div class="kpi-sub">Scénario central · calendrier 12 mois</div></div>
+    <div class="kpi accent"><div class="kpi-label">Taux d'occupation</div><div class="kpi-value">34 %</div><div class="kpi-sub">Marché Villers : 68% en saison (Welkeys)</div></div>
+    <div class="kpi dark"><div class="kpi-label">Revenus bruts estimés</div><div class="kpi-value">17 130 €</div><div class="kpi-sub">×6,2 vs situation actuelle</div></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Saison</th><th>Tarif/nuit</th><th>Nuits</th><th>Occupation</th><th>Revenus</th></tr></thead><tbody id="tbody-eukleia"></tbody></table></div>
+  <p class="source">Projections Eukleia : diffusion Airbnb + Booking + Abritel · min 2 nuits · tarification dynamique 95-175 €. Données marché : Welkeys Villers (ADR 110 €, 68% occup. saison), Likibu (ADR 93 €, pic août 120 €). Scénario central à 34% d'occupation (montée en puissance 1ère année).</p>
+</div>
+
+<!-- TAB 3 — COMPARAISON -->
+<div id="tab-comparaison" class="hidden">
+  <div class="kpi-grid">
+    <div class="kpi red"><div class="kpi-label">Revenus actuels</div><div class="kpi-value" id="c-act">—</div><div class="kpi-sub">16 nuits · Airbnb seul</div></div>
+    <div class="kpi accent"><div class="kpi-label">Avec Eukleia</div><div class="kpi-value" id="c-euk">—</div><div class="kpi-sub">125 nuits · 3 plateformes</div></div>
+    <div class="kpi dark"><div class="kpi-label">Gain brut annuel</div><div class="kpi-value" id="c-gain">—</div><div class="kpi-sub" id="c-mult">—</div></div>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-title">Revenus mensuels — Situation actuelle vs. Avec Eukleia</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#B4B2A9"></div>Situation actuelle</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2D6A4F"></div>Avec Eukleia</div>
+    </div>
+    <div class="bar-chart" id="bar-chart-compare"></div>
+  </div>
+  <div class="gain-card"><div class="gain-label">Gain brut estimé · même après commission Eukleia (20 % HT)</div><div class="gain-value" id="gain-net">—</div></div>
+</div>
+
+<!-- TAB 4 — SCÉNARIOS -->
+<div id="tab-scenarios" class="hidden">
+  <div class="scenarios-grid">
+    <div class="scenario plancher" onclick="selectScenario('plancher')"><div class="scenario-label">Scénario plancher</div><div class="scenario-value" id="sc-plan-val">—</div><div class="scenario-nights" id="sc-plan-nights">—</div><div class="scenario-occup" id="sc-plan-occ">—</div></div>
+    <div class="scenario central selected" onclick="selectScenario('central')"><div class="scenario-label">✓ Estimation centrale</div><div class="scenario-value" id="sc-cent-val">—</div><div class="scenario-nights" id="sc-cent-nights">—</div><div class="scenario-occup" id="sc-cent-occ">—</div></div>
+    <div class="scenario plafond" onclick="selectScenario('plafond')"><div class="scenario-label">Scénario plafond</div><div class="scenario-value" id="sc-plaf-val">—</div><div class="scenario-nights" id="sc-plaf-nights">—</div><div class="scenario-occup" id="sc-plaf-occ">—</div></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr><th>Mois</th><th>Saison</th><th>Tarif/nuit</th><th>Nuits</th><th>Occupation</th><th>Revenus</th></tr></thead><tbody id="tbody-scenarios"></tbody></table></div>
+  <div class="chart-wrap" style="margin-top:18px"><div class="chart-title" id="sc-chart-title">Revenus mensuels</div><div class="bar-chart" id="bar-chart-scenario"></div></div>
+  <p class="source">Tous les scénarios sont établis avant commission Eukleia (20 % HT) et charges.</p>
+</div>
+</div>
+
+<div class="footer">
+  <div class="footer-brand">EUKLEIA</div>
+  <div class="footer-contact">06 51 66 94 85 · chahine@eukleia.agency · 21 rue Louvel et Brière, 14800 Touques · Document non contractuel — Données marché au 27/03/2026</div>
+</div>
+
+<script>
+const MONTHS = [
+  { m:"Avr", tarif:120, days:30, saison:"Mi-saison", act_n:0,  act_tarif:174, plan:4,  cent:8,  plaf:12 },
+  { m:"Mai", tarif:130, days:31, saison:"Mi-saison", act_n:0,  act_tarif:174, plan:6,  cent:12, plaf:17 },
+  { m:"Jun", tarif:140, days:30, saison:"Mi-saison+",act_n:8,  act_tarif:174, plan:8,  cent:14, plaf:19 },
+  { m:"Jul", tarif:165, days:31, saison:"Haute",     act_n:0,  act_tarif:163, plan:15, cent:21, plaf:26 },
+  { m:"Aoû", tarif:175, days:31, saison:"Haute",     act_n:0,  act_tarif:170, plan:16, cent:22, plaf:27 },
+  { m:"Sep", tarif:130, days:30, saison:"Mi-saison", act_n:0,  act_tarif:174, plan:6,  cent:13, plaf:17 },
+  { m:"Oct", tarif:110, days:31, saison:"Mi-saison", act_n:7,  act_tarif:174, plan:4,  cent:8,  plaf:13 },
+  { m:"Nov", tarif:95,  days:30, saison:"Basse",     act_n:1,  act_tarif:174, plan:2,  cent:4,  plaf:7  },
+  { m:"Déc", tarif:110, days:31, saison:"Mi-saison", act_n:0,  act_tarif:174, plan:4,  cent:7,  plaf:11 },
+  { m:"Jan", tarif:95,  days:31, saison:"Basse",     act_n:0,  act_tarif:174, plan:2,  cent:4,  plaf:6  },
+  { m:"Fév", tarif:105, days:28, saison:"Mi-saison", act_n:0,  act_tarif:174, plan:4,  cent:7,  plaf:10 },
+  { m:"Mar", tarif:100, days:31, saison:"Basse",     act_n:0,  act_tarif:174, plan:3,  cent:5,  plaf:8  },
+];
+
+function fmt(n) { return n.toLocaleString('fr-FR'); }
+function badgeClass(s) { return s === 'Haute' ? 'badge-haute' : s === 'Basse' ? 'badge-basse' : 'badge-mi'; }
+function barColor(s) { return s === 'Haute' ? '#2D6A4F' : s === 'Basse' ? '#8A9BAB' : '#B8975A'; }
+
+function showTab(id) {
+  document.querySelectorAll('.content > div[id^="tab-"]').forEach(d => d.classList.add('hidden'));
+  document.getElementById('tab-' + id).classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// TAB 1 — ACTUEL
+function buildActuel() {
+  const tbody = document.getElementById('tbody-actuel');
+  let totN = 0, totR = 0;
+  MONTHS.forEach(m => {
+    const r = m.act_n * m.act_tarif;
+    totN += m.act_n; totR += r;
+    const obs = m.act_n === 0 ? '<span class="red">Vide</span>' : m.act_n + ' nuits réservées';
+    tbody.innerHTML += `<tr><td class="bold-navy">${m.m}</td><td class="muted">${m.act_tarif} €</td><td class="${m.act_n===0?'red':'bold-navy'}">${m.act_n}</td><td class="muted">${fmt(r)} €</td><td>${obs}</td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="total-row"><td colspan="2">TOTAL</td><td>${totN}</td><td class="gold">${fmt(totR)} €</td><td></td></tr>`;
+}
+
+// TAB 2 — EUKLEIA CENTRAL
+function buildEukleia() {
+  const tbody = document.getElementById('tbody-eukleia');
+  let totN = 0, totR = 0;
+  const maxRev = Math.max(...MONTHS.map(m => m.tarif * m.cent));
+  MONTHS.forEach(m => {
+    const rev = m.tarif * m.cent;
+    const occ = Math.round(m.cent / m.days * 100);
+    totN += m.cent; totR += rev;
+    tbody.innerHTML += `<tr><td class="bold-navy">${m.m}</td><td><span class="badge ${badgeClass(m.saison)}">${m.saison}</span></td><td style="color:#B8975A;font-weight:600">${m.tarif} €</td><td>${m.cent}</td><td><div class="bar-wrap"><div class="bar-fill" style="width:${occ}%;background:${barColor(m.saison)}"></div></div><span class="occ-label">${occ}%</span></td><td class="bold-navy">${fmt(rev)} €</td></tr>`;
+  });
+  tbody.innerHTML += `<tr class="total-row"><td colspan="3">TOTAL</td><td>${totN} n.</td><td></td><td class="gold">${fmt(totR)} €</td></tr>`;
+}
+
+// TAB 3 — COMPARAISON
+function buildComparaison() {
+  let totAct = 0, totEuk = 0;
+  const chartEl = document.getElementById('bar-chart-compare');
+  const maxR = Math.max(...MONTHS.map(m => Math.max(m.act_n * m.act_tarif, m.tarif * m.cent)));
+  MONTHS.forEach(m => {
+    const aR = m.act_n * m.act_tarif;
+    const eR = m.tarif * m.cent;
+    totAct += aR; totEuk += eR;
+    const aPct = maxR > 0 ? Math.round(aR / maxR * 100) : 0;
+    const ePct = maxR > 0 ? Math.round(eR / maxR * 100) : 0;
+    chartEl.innerHTML += `<div class="bar-row"><div class="bar-month">${m.m}</div><div class="bar-tracks"><div class="bar-track" style="width:${Math.max(aPct,1)}%;background:#B4B2A9"><span class="bar-label">${aR > 0 ? fmt(aR)+'€' : ''}</span></div><div class="bar-track" style="width:${Math.max(ePct,2)}%;background:#2D6A4F"><span class="bar-label">${fmt(eR)} €</span></div></div></div>`;
+  });
+  document.getElementById('c-act').textContent = fmt(totAct) + ' €';
+  document.getElementById('c-euk').textContent = fmt(totEuk) + ' €';
+  document.getElementById('c-gain').textContent = '+' + fmt(totEuk - totAct) + ' €';
+  document.getElementById('c-mult').textContent = '×' + (totEuk / totAct).toFixed(1) + ' vs actuel';
+  const netGain = totEuk * 0.80 - totAct;
+  document.getElementById('gain-net').textContent = '+' + fmt(Math.round(netGain)) + ' €';
+}
+
+// TAB 4 — SCENARIOS
+function getKey(s) { return s === 'plancher' ? 'plan' : s === 'plafond' ? 'plaf' : 'cent'; }
+function getLabel(s) { return s === 'plancher' ? 'Scénario plancher' : s === 'plafond' ? 'Scénario plafond' : 'Estimation centrale'; }
+
+function buildScenarioCards() {
+  let t = { plan:{n:0,r:0}, cent:{n:0,r:0}, plaf:{n:0,r:0} };
+  MONTHS.forEach(m => { ['plan','cent','plaf'].forEach(k => { t[k].n += m[k]; t[k].r += m.tarif * m[k]; }); });
+  document.getElementById('sc-plan-val').textContent = fmt(t.plan.r) + ' €';
+  document.getElementById('sc-plan-nights').textContent = t.plan.n + ' nuits';
+  document.getElementById('sc-plan-occ').textContent = 'Occupation : ' + Math.round(t.plan.n/365*100) + '%';
+  document.getElementById('sc-cent-val').textContent = fmt(t.cent.r) + ' €';
+  document.getElementById('sc-cent-nights').textContent = t.cent.n + ' nuits';
+  document.getElementById('sc-cent-occ').textContent = 'Occupation : ' + Math.round(t.cent.n/365*100) + '%';
+  document.getElementById('sc-plaf-val').textContent = fmt(t.plaf.r) + ' €';
+  document.getElementById('sc-plaf-nights').textContent = t.plaf.n + ' nuits';
+  document.getElementById('sc-plaf-occ').textContent = 'Occupation : ' + Math.round(t.plaf.n/365*100) + '%';
+}
+
+function renderScenarioTable(s) {
+  const k = getKey(s);
+  const tbody = document.getElementById('tbody-scenarios');
+  const chart = document.getElementById('bar-chart-scenario');
+  document.getElementById('sc-chart-title').textContent = 'Revenus mensuels — ' + getLabel(s);
+  tbody.innerHTML = ''; chart.innerHTML = '';
+  let totN = 0, totR = 0;
+  const maxR = Math.max(...MONTHS.map(m => m.tarif * m[k]));
+  MONTHS.forEach(m => {
+    const n = m[k], rev = m.tarif * n, occ = Math.round(n/m.days*100);
+    totN += n; totR += rev;
+    tbody.innerHTML += `<tr><td class="bold-navy">${m.m}</td><td><span class="badge ${badgeClass(m.saison)}">${m.saison}</span></td><td style="color:#B8975A;font-weight:600">${m.tarif} €</td><td>${n}</td><td><div class="bar-wrap"><div class="bar-fill" style="width:${occ}%;background:${barColor(m.saison)}"></div></div><span class="occ-label">${occ}%</span></td><td class="bold-navy">${fmt(rev)} €</td></tr>`;
+    const pct = maxR > 0 ? Math.round(rev/maxR*100) : 0;
+    chart.innerHTML += `<div class="bar-row"><div class="bar-month">${m.m}</div><div style="flex:1"><div class="bar-track" style="width:${Math.max(pct,2)}%;background:${barColor(m.saison)}"><span class="bar-label">${fmt(rev)} €</span></div></div></div>`;
+  });
+  tbody.innerHTML += `<tr class="total-row"><td colspan="3">TOTAL</td><td>${totN} n.</td><td></td><td class="gold">${fmt(totR)} €</td></tr>`;
+}
+
+function selectScenario(s) {
+  document.querySelectorAll('.scenario').forEach(el => el.classList.remove('selected'));
+  document.querySelector('.scenario.' + s).classList.add('selected');
+  renderScenarioTable(s);
+}
+
+buildActuel(); buildEukleia(); buildComparaison(); buildScenarioCards(); selectScenario('central');
+</script>
+</body>
+</html>
